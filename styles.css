@@ -1,0 +1,19 @@
+.scores {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+}
+
+.choices {
+    text-align: center;
+}
+
+.screen {
+    text-align: center;
+}
+
+.result h2 {
+    color: blue;
+    text-align: center;
+}

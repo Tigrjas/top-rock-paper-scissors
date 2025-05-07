@@ -15,12 +15,13 @@ function getHumanChoice() {
     return userInput;
 }
 
-function playRound() {
+function playRound(humanChoice) {
     console.log("-------New round!------")
     computerChoice = getComputerChoice();
-    humanChoice = getHumanChoice().toLowerCase();
+    humanChoice = humanChoice;
 
     console.log(`The computer chose: ${computerChoice}`);
+    updateScreen(humanChoice, computerChoice);
     
     if (humanChoice == 'rock' && computerChoice == 'rock') {
         console.log("Rock ties with Rock. Draw!")
@@ -52,20 +53,61 @@ function playRound() {
     }
 }
 
-function playGame() {
-    humanScore = 0;
-    computerScore = 0;
-    numberOfGames = 5;
+function updateScreen(humanChoice, computerChoice) {
+    const screen = document.querySelector(".screen");
+    screen.textContent = `You chose ${humanChoice} and computer chose ${computerChoice}`;
+}
 
-    for (let i = 0; i < numberOfGames; i ++) {
-        result = playRound();
+function updateScore(humanScore, computerScore) {
+    const human = document.querySelector(".human-score h3");
+    const computer = document.querySelector(".computer-score h3");
+    human.textContent = humanScore;
+    computer.textContent = computerScore;
+}
+
+
+function playGame() {
+    let humanScore = 0;
+    let computerScore = 0;
+    let games = 0;
+    const buttons = document.querySelectorAll("button");
+
+    function handleClick(event) {
+        const humanChoice = event.target.id;
+        const result = playRound(humanChoice);
+        const screen = document.querySelector(".screen");
+
         if (result == 1) {
+            screen.textContent += " (LOSS)";
             computerScore++;
         } else if (result == 2) {
+            screen.textContent += " (WIN)";
             humanScore++;
+        } else {
+            screen.textContent += " (DRAW)";
         }
-        console.log(`Current Score:\n\tUser Score: ${humanScore}\n\tComputer Score: ${computerScore}`)
+
+        games++;
+        updateScore(humanScore, computerScore);
+
+        if (games === 5) {
+            const resultEl = document.querySelector(".result h2");
+            if (humanScore > computerScore) {
+                resultEl.textContent = "YOU'RE THE WINNER!";
+            } else {
+                resultEl.textContent = "COMPUTER WON";
+            }
+
+            // Disable buttons to stop further clicks
+            buttons.forEach(btn => btn.disabled = true);
+        }
+
+        console.log(`Current Score:\n\tUser Score: ${humanScore}\n\tComputer Score: ${computerScore}`);
     }
+
+    buttons.forEach((button) => {
+        button.addEventListener('click', handleClick);
+    });
 }
 
 playGame();
